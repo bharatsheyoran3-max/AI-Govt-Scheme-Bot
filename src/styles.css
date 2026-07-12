@@ -100,7 +100,52 @@
   button, a, [role="button"] { min-height: 44px; }
 }
 
+/* High Contrast Accessibility Overrides */
+body.accessibility-high-contrast {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --popover: #000000;
+  --popover-foreground: #ffffff;
+  --primary: #ffff00;
+  --primary-foreground: #000000;
+  --secondary: #121212;
+  --secondary-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #ffffff;
+  --muted: #121212;
+  --muted-foreground: #ffff00;
+  --accent: #ffff00;
+  --accent-foreground: #000000;
+  --saffron: #ffff00;
+  --saffron-foreground: #000000;
+  --success: #00ff00;
+  --success-foreground: #000000;
+  --warning: #ffff00;
+  --warning-foreground: #000000;
+  --destructive: #ff0000;
+  --destructive-foreground: #ffffff;
+  --shadow-card: none;
+  --shadow-elevated: none;
+  --gradient-hero: linear-gradient(140deg, #000000, #121212);
+  --gradient-saffron: linear-gradient(140deg, #ffff00, #ffff00);
+}
+
+body.accessibility-high-contrast button,
+body.accessibility-high-contrast a,
+body.accessibility-high-contrast [role="button"] {
+  border: 2px solid #ffffff !important;
+}
+
+body.accessibility-high-contrast button:hover,
+body.accessibility-high-contrast a:hover {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+}
+
 @utility bg-hero { background: var(--gradient-hero); }
 @utility bg-saffron-gradient { background: var(--gradient-saffron); }
 @utility shadow-card { box-shadow: var(--shadow-card); }
 @utility shadow-elevated { box-shadow: var(--shadow-elevated); }
+

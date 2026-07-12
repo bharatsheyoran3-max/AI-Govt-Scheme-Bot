@@ -10,7 +10,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -37,9 +36,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -86,8 +82,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "SchemeSathi — Find Indian government schemes you qualify for" },
       { name: "twitter:description", content: "SchemeSathi helps Indian citizens discover government schemes they are eligible for, in 6 languages, with a clear document checklist for each scheme." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6e2896c6-d076-42c2-bad7-725005e60563/id-preview-ee4d5d74--64cecc90-95fd-4738-aadc-345c46892fd2.lovable.app-1783858923759.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6e2896c6-d076-42c2-bad7-725005e60563/id-preview-ee4d5d74--64cecc90-95fd-4738-aadc-345c46892fd2.lovable.app-1783858923759.png" },
+      { property: "og:image", content: "/og-image.png" },
+      { name: "twitter:image", content: "/og-image.png" },
+      {
+        "http-equiv": "Content-Security-Policy",
+        content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;"
+      }
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -122,6 +122,24 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    // Register Service Worker for offline capabilities (PWA)
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").then(
+          (reg) => console.log("[Service Worker] Registered successfully: ", reg.scope),
+          (err) => console.error("[Service Worker] Registration failed: ", err)
+        );
+      });
+    }
+
+    // High Contrast Theme Initialization (Restore user preference)
+    const isHighContrast = window.localStorage.getItem("schemesathi.highcontrast") === "true";
+    if (isHighContrast) {
+      document.body.classList.add("accessibility-high-contrast");
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

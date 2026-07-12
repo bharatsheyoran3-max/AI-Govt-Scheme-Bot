@@ -39,6 +39,10 @@ const en: Dict = {
   consent_p2: "Your answers stay on this device unless you choose to save them.",
   consent_p3: "We do not ask for your full Aadhaar number.",
   consent_p4: "You can start over or clear your answers at any time.",
+  consent_screening: "Screening: Check my answers against rules to show matching schemes.",
+  consent_autofill: "Auto-fill: Save answers temporarily in this session to help fill forms later.",
+  consent_submission: "Submission: Send verified files/details to official government portals.",
+  consent_warning: "Please select at least 'Screening' consent to proceed.",
   consent_agree: "I understand and want to continue",
   consent_decline: "Not now",
 

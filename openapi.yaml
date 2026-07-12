@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: SchemeSathi Backend API
+  description: API Gateway and Microservices for multilingual, low-literacy government scheme matching.
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: TanStack Start local handler API
+paths:
+  /consent:
+    post:
+      summary: Log user granular consent
+      description: Record explicit consent checks for screening, auto-fill, and application submission.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - purposes
+              properties:
+                userId:
+                  type: string
+                  example: "usr_992143a"
+                purposes:
+                  type: object
+                  required:
+                    - screening
+                    - autoFill
+                    - submission
+                  properties:
+                    screening:
+                      type: boolean
+                    autoFill:
+                      type: boolean
+                    submission:
+                      type: boolean
+      responses:
+        '200':
+          description: Consent logged successfully
+        '400':
+          description: Invalid request payload
+    get:
+      summary: Retrieve user active consent state
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Returns consent state
+        '400':
+          description: Missing parameters
+
+  /eligibility:
+    post:
+      summary: Check scheme eligibility
+      description: Evaluates the active citizen profile against the declarative rules engine.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - profile
+              properties:
+                userId:
+                  type: string
+                profile:
+                  type: object
+                  properties:
+                    state:
+                      type: string
+                    age:
+                      type: integer
+                    gender:
+                      type: string
+                      enum: [male, female, other]
+                    income:
+                      type: number
+                    occupation:
+                      type: string
+                      enum: [farmer, student, salaried, self, unemployed, retired]
+                    category:
+                      type: string
+                      enum: [general, obc, sc, st, ews]
+                    land:
+                      type: string
+                      enum: [none, small, medium, large]
+                    disability:
+                      type: boolean
+                    ration:
+                      type: string
+                      enum: [bpl, aay, apl, none]
+                    familySize:
+                      type: integer
+      responses:
+        '200':
+          description: Evaluation complete
+        '403':
+          description: Missing active consent to perform screening
+
+  /nlu:
+    post:
+      summary: Parse query string to profile parameters and schemes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Intent analysis parsed successfully
+
+  /document/validate:
+    post:
+      summary: Verify uploaded document file type and size
+      description: Validates magic bytes (signatures) of PDFs, JPEGs, or PNGs to prevent injection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fileContent
+              properties:
+                fileContent:
+                  type: string
+                  description: Base64 representation of target file
+      responses:
+        '200':
+          description: File validation details returned
+        '400':
+          description: Exceeded limit size (5MB) or mismatching signature
+
+  /document/digilocker-auth:
+    post:
+      summary: Retrieve DigiLocker redirect gate authorization URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - redirectUrl
+              properties:
+                redirectUrl:
+                  type: string
+      responses:
+        '200':
+          description: Auth URL generated
+
+  /document/digilocker-verify:
+    post:
+      summary: Exchange DigiLocker auth code for document metadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+                - transactionId
+              properties:
+                code:
+                  type: string
+                transactionId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Token masked and verified documents lists returned
+
+  /document/ekyc-verify:
+    post:
+      summary: Verify Aadhaar OTP and fetch masked demographic details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - otp
+                - trackingId
+              properties:
+                otp:
+                  type: string
+                  length: 6
+                trackingId:
+                  type: string
+      responses:
+        '200':
+          description: OTP correct, returns masked Aadhaar and verified demographics
+
+  /audit:
+    get:
+      summary: Query system immutable logs
+      description: Admin role restricted access to log records.
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+      security:
+        - AdminRole: []
+      responses:
+        '200':
+          description: List of audit records
+        '403':
+          description: Client lacks admin authorization role

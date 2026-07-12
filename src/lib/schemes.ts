@@ -198,7 +198,7 @@ export const SCHEMES: Scheme[] = [
   {
     id: "ignoaps",
     ministry: "Ministry of Rural Development",
-    sourceUrl: "https://nsap.nic.in",
+    sourceUrl: "https://nsap.gov.in",
     name: {
       en: "Indira Gandhi National Old Age Pension (IGNOAPS)",
       hi: "इंदिरा गांधी राष्ट्रीय वृद्धावस्था पेंशन",
@@ -216,8 +216,8 @@ export const SCHEMES: Scheme[] = [
       hi: "₹200/माह (60–79 वर्ष) और ₹500/माह (80+ वर्ष), बैंक खाते में।",
     },
     whereToApply: {
-      en: "Block/Panchayat office or nsap.nic.in via CSC.",
-      hi: "ब्लॉक/पंचायत कार्यालय या CSC के माध्यम से nsap.nic.in पर।",
+      en: "Block/Panchayat office or nsap.gov.in via CSC.",
+      hi: "ब्लॉक/पंचायत कार्यालय या CSC के माध्यम से nsap.gov.in पर।",
     },
     documents: ["aadhaar", "bank", "age", "ration"],
     rule: {
@@ -235,7 +235,7 @@ export const SCHEMES: Scheme[] = [
   {
     id: "pmay-g",
     ministry: "Ministry of Rural Development",
-    sourceUrl: "https://pmayg.nic.in",
+    sourceUrl: "https://pmayg.gov.in",
     name: {
       en: "PM Awas Yojana – Gramin",
       hi: "पीएम आवास योजना – ग्रामीण",
@@ -253,8 +253,8 @@ export const SCHEMES: Scheme[] = [
       hi: "₹1.20 लाख (मैदानी) या ₹1.30 लाख (पहाड़ी) साथ ही MGNREGA श्रम सहायता।",
     },
     whereToApply: {
-      en: "Gram Panchayat / Block office; check status at pmayg.nic.in",
-      hi: "ग्राम पंचायत / ब्लॉक कार्यालय; स्थिति pmayg.nic.in पर देखें।",
+      en: "Gram Panchayat / Block office; check status at pmayg.gov.in",
+      hi: "ग्राम पंचायत / ब्लॉक कार्यालय; स्थिति pmayg.gov.in पर देखें।",
     },
     documents: ["aadhaar", "bank", "ration", "income"],
     rule: {
