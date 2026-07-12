@@ -13,6 +13,7 @@ import { Route as ResultsRouteImport } from './routes/results'
 import { Route as QuestionnaireRouteImport } from './routes/questionnaire'
 import { Route as ConsentRouteImport } from './routes/consent'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SchemeIdRouteImport } from './routes/scheme.$id'
 
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SchemeIdRoute = SchemeIdRouteImport.update({
+  id: '/scheme/$id',
+  path: '/scheme/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/consent': typeof ConsentRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/results': typeof ResultsRoute
+  '/scheme/$id': typeof SchemeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/consent': typeof ConsentRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/results': typeof ResultsRoute
+  '/scheme/$id': typeof SchemeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/consent': typeof ConsentRoute
   '/questionnaire': typeof QuestionnaireRoute
   '/results': typeof ResultsRoute
+  '/scheme/$id': typeof SchemeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/consent' | '/questionnaire' | '/results'
+  fullPaths: '/' | '/consent' | '/questionnaire' | '/results' | '/scheme/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/consent' | '/questionnaire' | '/results'
-  id: '__root__' | '/' | '/consent' | '/questionnaire' | '/results'
+  to: '/' | '/consent' | '/questionnaire' | '/results' | '/scheme/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/consent'
+    | '/questionnaire'
+    | '/results'
+    | '/scheme/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +82,7 @@ export interface RootRouteChildren {
   ConsentRoute: typeof ConsentRoute
   QuestionnaireRoute: typeof QuestionnaireRoute
   ResultsRoute: typeof ResultsRoute
+  SchemeIdRoute: typeof SchemeIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +115,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scheme/$id': {
+      id: '/scheme/$id'
+      path: '/scheme/$id'
+      fullPath: '/scheme/$id'
+      preLoaderRoute: typeof SchemeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsentRoute: ConsentRoute,
   QuestionnaireRoute: QuestionnaireRoute,
   ResultsRoute: ResultsRoute,
+  SchemeIdRoute: SchemeIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
